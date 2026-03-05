@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sistema Seguro</title>
+
+<style>
+body{
+background:black;
+color:#00ff9c;
+font-family:monospace;
+text-align:center;
+padding:20px;
+}
+
+#terminal{
+margin-top:40px;
+min-height:120px;
+}
+
+input{
+background:black;
+border:1px solid #00ff9c;
+color:#00ff9c;
+padding:12px;
+font-size:18px;
+width:80%;
+max-width:300px;
+margin-top:20px;
+}
+
+.glow{
+animation: brilho 1s infinite alternate;
+}
+
+@keyframes brilho{
+from{text-shadow:0 0 5px #00ff9c}
+to{text-shadow:0 0 20px #00ff9c}
+}
+</style>
+</head>
+<body>
+
+<div id="terminal"></div>
+<input id="senha" placeholder="Digite a senha secreta" />
+<div id="resultado"></div>
+
+<script>
+
+const linhas=[
+"Iniciando sistema...",
+"Acessando servidor seguro...",
+"Identificando usuário...",
+"Usuário encontrado: Samuel",
+"Protocolo de segurança ativado",
+"Digite a senha para desbloquear"
+]
+
+let i=0
+
+function digitar(){
+if(i<linhas.length){
+document.getElementById("terminal").innerHTML+=linhas[i]+"<br>"
+i++
+setTimeout(digitar,900)
+}
+}
+
+digitar()
+
+let tentativas=0
+
+document.getElementById("senha").addEventListener("keydown",function(e){
+
+if(e.key==="Enter"){
+
+let valor=this.value.trim().toLowerCase()
+
+if(valor==="eu te amo"){
+
+document.getElementById("resultado").innerHTML=`
+
+<h2 class="glow">ACESSO AUTORIZADO</h2>
+<h3>Samuel ❤️</h3>
+<h1 class="glow">VALE PRESENTE</h1>
+<h1>Vale 100 em roupas</h1>
+<h3>#banho de loja</h3>
+<p>"A melhor invasão da minha vida foi você no meu coração."</p>
+
+`
+
+}else{
+
+tentativas++
+
+if(tentativas>=3){
+document.getElementById("resultado").innerHTML="<h2>SISTEMA BLOQUEADO</h2>"
+}else{
+document.getElementById("resultado").innerHTML="Senha incorreta"
+}
+
+}
+
+this.value=""
+}
+
+})
+
+</script>
+
+</body>
+</html>
