@@ -1,114 +1,224 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html>
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sistema Seguro</title>
+<title>Presente</title>
 
 <style>
+
 body{
 background:black;
-color:#00ff9c;
-font-family:monospace;
+color:white;
+font-family:Arial;
 text-align:center;
-padding:20px;
+margin:0;
 }
 
-#terminal{
-margin-top:40px;
-min-height:120px;
+button{
+padding:12px 25px;
+font-size:16px;
+background:#ff4d6d;
+border:none;
+border-radius:10px;
+color:white;
+cursor:pointer;
 }
 
 input{
-background:black;
-border:1px solid #00ff9c;
-color:#00ff9c;
-padding:12px;
-font-size:18px;
-width:80%;
-max-width:300px;
-margin-top:20px;
+padding:10px;
+font-size:16px;
 }
 
-.glow{
-animation: brilho 1s infinite alternate;
+.tela{
+display:none;
+padding:40px;
 }
 
-@keyframes brilho{
-from{text-shadow:0 0 5px #00ff9c}
-to{text-shadow:0 0 20px #00ff9c}
+.coracao{
+position:fixed;
+top:-10px;
+animation:cair 6s linear infinite;
 }
+
+@keyframes cair{
+0%{transform:translateY(-10px)}
+100%{transform:translateY(110vh)}
+}
+
+.caixa{
+width:150px;
+height:150px;
+margin:auto;
+cursor:pointer;
+position:relative;
+}
+
+.tampa{
+width:150px;
+height:40px;
+background:red;
+position:absolute;
+top:0;
+transition:1s;
+}
+
+.base{
+width:150px;
+height:110px;
+background:#ff8080;
+position:absolute;
+bottom:0;
+}
+
+.aberta .tampa{
+transform:rotate(-40deg) translateY(-60px);
+}
+
 </style>
+
 </head>
+
 <body>
 
-<div id="terminal"></div>
-<input id="senha" placeholder="Digite a senha secreta" />
-<div id="resultado"></div>
+<audio id="musica" controls>
+<source src="pride.mp3" type="audio/mpeg">
+</audio>
+
+<div id="inicio" class="tela" style="display:block">
+
+<h1>🎁 Existe um presente para você</h1>
+<p>Mas só será liberado se acertar o quiz</p>
+
+<button onclick="iniciar()">Começar</button>
+
+</div>
+
+<div id="quiz" class="tela">
+
+<h2 id="pergunta"></h2>
+
+<input id="resposta">
+
+<br><br>
+
+<button onclick="verificar()">Responder</button>
+
+<p id="tentativas"></p>
+
+</div>
+
+<div id="presente" class="tela">
+
+<h1>🎉 Parabéns</h1>
+
+<p>Clique no presente</p>
+
+<div class="caixa" id="caixa" onclick="abrir()">
+
+<div class="tampa"></div>
+<div class="base"></div>
+
+</div>
+
+<div id="site" style="display:none">
+
+<h2>Seu presente ❤️</h2>
+
+<p>Aqui você pode colocar o conteúdo do seu site</p>
+
+</div>
+
+</div>
 
 <script>
 
-const linhas=[
-"Iniciando sistema...",
-"Acessando servidor seguro...",
-"Identificando usuário...",
-"Usuário encontrado: Samuel",
-"Protocolo de segurança ativado",
-"Digite a senha para desbloquear"
+let perguntas=[
+{p:"Há quantos dias estamos juntos?",r:"313"},
+{p:"Onde foi nossa primeira foto juntos?",r:"sapuca"}
 ]
 
-let i=0
-
-function digitar(){
-if(i<linhas.length){
-document.getElementById("terminal").innerHTML+=linhas[i]+"<br>"
-i++
-setTimeout(digitar,900)
-}
-}
-
-digitar()
-
+let atual=0
 let tentativas=0
 
-document.getElementById("senha").addEventListener("keydown",function(e){
+function iniciar(){
 
-if(e.key==="Enter"){
+document.getElementById("inicio").style.display="none"
+document.getElementById("quiz").style.display="block"
 
-let valor=this.value.trim().toLowerCase()
+mostrar()
 
-if(valor==="eu te amo"){
+coracoes()
 
-document.getElementById("resultado").innerHTML=`
+}
 
-<h2 class="glow">ACESSO AUTORIZADO</h2>
-<h3>Samuel ❤️</h3>
-<h1 class="glow">VALE PRESENTE</h1>
-<h1>Vale 1000 em roupas</h1>
-<h3>#banho de loja</h3>
-<p>"A melhor invasão da minha vida foi você no meu coração."</p>
+function mostrar(){
 
-`
+document.getElementById("pergunta").innerText=perguntas[atual].p
 
-}else{
+}
+
+function verificar(){
+
+let r=document.getElementById("resposta").value.toLowerCase()
 
 tentativas++
 
-if(tentativas>=3){
-document.getElementById("resultado").innerHTML="<h2>SISTEMA BLOQUEADO</h2>"
+document.getElementById("tentativas").innerText="Tentativas: "+tentativas
+
+if(r.includes(perguntas[atual].r)){
+
+atual++
+
+if(atual<perguntas.length){
+
+mostrar()
+
 }else{
-document.getElementById("resultado").innerHTML="Senha incorreta"
-}
+
+document.getElementById("quiz").style.display="none"
+document.getElementById("presente").style.display="block"
 
 }
 
-this.value=""
+}else{
+
+alert("Resposta errada")
+
 }
 
-})
+}
+
+function abrir(){
+
+document.getElementById("caixa").classList.add("aberta")
+
+setTimeout(()=>{
+document.getElementById("site").style.display="block"
+},1000)
+
+}
+
+function coracoes(){
+
+setInterval(()=>{
+
+let c=document.createElement("div")
+
+c.className="coracao"
+c.innerHTML="❤️"
+
+c.style.left=Math.random()*100+"vw"
+
+document.body.appendChild(c)
+
+setTimeout(()=>{c.remove()},6000)
+
+},300)
+
+}
 
 </script>
 
 </body>
-
 </html>
+
